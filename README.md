@@ -2,6 +2,10 @@
 
 this is a odin project exercises where I use authentication and authorization
 
+
+![alt text](image.png)
+
+
 ## techstack
 
 - postgres (neon)

@@ -20,7 +20,7 @@ async function loginGet(req, res) {
   res.render("forms/login-form");
 }
 
-async function logoutPost(req, res, next) {
+async function logoutGet(req, res, next) {
   req.logout((err) => {
     if (err) {
       return next(err);
@@ -33,10 +33,24 @@ async function loginPost(req, res) {
   const { username, password } = req.body;
 }
 
+async function clubSecretPost(req, res) {
+  const { secrets } = req.body;
+  const userId = req.user.id;
+
+  if (secrets === "secret?") {
+    await db.postUpdateUserStatus(userId, "active");
+  } else if (secrets === "admin?") {
+    await db.postUpdateUserStatus(userId, "admin");
+  }
+
+  res.redirect("/club");
+}
+
 module.exports = {
   signupGet,
   signupPost,
   loginGet,
   loginPost,
-  logoutPost,
+  logoutGet,
+  clubSecretPost,
 };

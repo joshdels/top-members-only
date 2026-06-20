@@ -5,14 +5,19 @@ const {
   signupPost,
   loginPost,
   loginGet,
-  logoutPost,
+  logoutGet,
+  clubSecretPost,
 } = require("../controllers/authControllers");
+const {
+  ensureGuest,
+  ensureAuthenticated,
+} = require("../middleware/authMiddleware");
 
 const authRouter = Router();
 
-authRouter.get("/sign-up", signupGet);
-authRouter.post("/sign-up", signupPost);
-authRouter.get("/log-in", loginGet);
+authRouter.get("/sign-up", ensureGuest, signupGet);
+authRouter.post("/sign-up", ensureGuest, signupPost);
+authRouter.get("/log-in", ensureGuest, loginGet);
 
 authRouter.post(
   "/log-in",
@@ -23,6 +28,7 @@ authRouter.post(
   }),
 );
 
-authRouter.get("/log-out", logoutPost);
+authRouter.get("/log-out", logoutGet);
+authRouter.post("/club-secret", ensureAuthenticated, clubSecretPost);
 
 module.exports = authRouter;

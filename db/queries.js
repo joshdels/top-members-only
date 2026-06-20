@@ -13,6 +13,15 @@ async function getUserById(id) {
   return rows[0];
 }
 
+async function postUpdateUserStatus(id, status) {
+  await pool.query(
+    `
+    UPDATE users SET membership_status = $2 WHERE id = $1  
+  `,
+    [id, status],
+  );
+}
+
 async function getPublicMessages() {
   const { rows } = await pool.query(
     "SELECT * FROM messages ORDER BY date DESC ",
@@ -22,10 +31,10 @@ async function getPublicMessages() {
 
 async function getPrivateMessages() {
   const { rows } = await pool.query(`
-    SELECT messages.message, messages.date, users.username  
+    SELECT messages.id, messages.message, messages.date, users.username  
     FROM messages JOIN users
       ON users.id = messages.user_id
-    ORDER BY messages.date ASC  
+    ORDER BY messages.date DESC  
     `);
   return rows;
 }
@@ -52,6 +61,15 @@ async function postNewMessage(user_id, message) {
   );
 }
 
+async function deleteMessage(id) {
+  await pool.query(
+    `
+      DELETE FROM messages WHERE id = $1
+    `,
+    [id],
+  );
+}
+
 module.exports = {
   getPublicMessages,
   getPrivateMessages,
@@ -59,4 +77,6 @@ module.exports = {
   postNewMessage,
   getUserByUsername,
   getUserById,
+  postUpdateUserStatus,
+  deleteMessage,
 };

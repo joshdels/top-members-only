@@ -9,7 +9,9 @@ async function publicMessagesGet(req, res) {
 
 async function privateMessagesGet(req, res) {
   const messages = await db.getPrivateMessages();
+
   res.render("club", {
+    user: req.user,
     messages: messages,
   });
 }
@@ -18,15 +20,20 @@ async function sendNewMessagePost(req, res) {
   const { message } = req.body;
   const user_id = req.user.id;
 
-  console.log("user_id", user_id);
-  console.log("message", message);
-
-  db.postNewMessage(user_id, message);
+  await db.postNewMessage(user_id, message);
   res.redirect("club");
+}
+
+async function deleteMessagePost(req, res) {
+  const { id } = req.params;
+  await db.deleteMessage(id);
+
+  res.redirect("/club");
 }
 
 module.exports = {
   publicMessagesGet,
   privateMessagesGet,
   sendNewMessagePost,
+  deleteMessagePost,
 };

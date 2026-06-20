@@ -9,27 +9,74 @@
   <h1>Club</h1>
 
   <aside>
-    <h1>Send a message</h1>
-    <form action="/club-message" method="post">
-      <label for="">
-        <input type="textarea" name="message">
-        <button>send</button>
-      </label>
-    </form>
+    <% if (user && user.membership_status === "active" || user.membership_status === "admin") { %>
+
+    
+      <p>Welcome <%= user.username %></p>
+      <p><%= user.membership_status %> </p>
+      <a href="/log-out">Logout</a>
+
+      <h1>Send a message</h1>
+      <form action="/club-message" method="post">
+        <textarea name="message"></textarea>
+        <button type="submit">send</button>
+      </form>
+
+    <% } else { %>
+
+      <p>Join the club and send messages??</p>
+
+      <p>Welcome <%= user.username %></p>
+      <a href="/log-out">Logout</a>
+
+      <form action="/club-secret" method="post">
+        <input type="text" name="secrets" placeholder="secret key?">
+        <button type="submit">join</button>
+      </form>
+    <% } %>
   </aside>
 
   <main>
 
-    <% if (messages && messages.length) { %>
+    <br>
 
-      <% messages.forEach(message => { %>
-        <h1><%= message.message %></h1>
-      <% }) %>
+    <% if (user && user.membership_status === "active") { %>
+      <% if (messages && messages.length) { %>
+
+        <% messages.forEach(message => { %>
+          <p><%= message.message %> - <%= message.username %> </p>
+        <% }) %>
+
+      <% } else { %>
+        <p>There are no messages.</p>
+      <% } %>
+
+
+    <% } else if (user && user.membership_status === "admin") { %>
+      <% if (messages && messages.length) { %>
+
+        <% messages.forEach(message => { %>
+          <p><%= message.message %>  - <%= message.username %>  </p>
+          
+          <form action="/delete-message/<%= message.id %>" method="post">
+            <button type="submit">delete</button>
+          </form>
+        <% }) %>
+
+      <% } else { %>
+        <p>There are no messages.</p>
+      <% } %>
 
     <% } else { %>
+      <% if (messages && messages.length) { %>
 
-      <p>There are no messages.</p>
+        <% messages.forEach(message => { %>
+          <p><%= message.message %> </p>
+        <% }) %>
 
+      <% } else { %>
+        <p>There are no messages.</p>
+      <% } %>
     <% } %>
 
   </main>
