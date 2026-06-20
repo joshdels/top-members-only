@@ -1,8 +1,16 @@
 const pool = require("./pool");
 
-async function getUsers() {
-  const { rows } = await pool.query("SELECT * FROM users");
-  return rows;
+async function getUserByUsername(username) {
+  const { rows } = await pool.query("SELECT * FROM users WHERE username = $1", [
+    username,
+  ]);
+
+  return rows[0];
+}
+
+async function getUserById(id) {
+  const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+  return rows[0];
 }
 
 async function getPublicMessages() {
@@ -17,8 +25,7 @@ async function getPrivateMessages() {
     SELECT messages.message, messages.date, users.username  
     FROM messages JOIN users
       ON users.id = messages.user_id
-    ORDER BY messages.date ASC
-    
+    ORDER BY messages.date ASC  
     `);
   return rows;
 }
@@ -46,9 +53,10 @@ async function postNewMessage(user_id, message) {
 }
 
 module.exports = {
-  getUsers,
   getPublicMessages,
   getPrivateMessages,
   postNewUsers,
   postNewMessage,
+  getUserByUsername,
+  getUserById,
 };

@@ -18,21 +18,29 @@ CREATE TABLE IF NOT EXISTS messages (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insert mock users safely
-INSERT INTO users (full_name, username, password, membership_status) 
-VALUES 
+INSERT INTO users (
+  full_name,
+  username,
+  password,
+  membership_status
+)
+VALUES
   ('Alice Smith', 'alice_s', 'hashed_password_123', 'active'),
   ('Bob Jones', 'bob_j', 'hashed_password_456', 'inactive'),
   ('Charlie Brown', 'charlie_b', 'hashed_password_789', 'active')
+ON CONFLICT (username) DO NOTHING;
 
-
--- Insert sample messages linking dynamically via username to avoid ID collisions
 INSERT INTO messages (user_id, message)
-VALUES 
-  ((SELECT id FROM users WHERE username = 'alice_s'), 'Hello world! This is Alices first long text message string.'),
-  ((SELECT id FROM users WHERE username = 'bob_j'), 'Hey there, Bob here. Just checking out the new message board system.'),
-  ((SELECT id FROM users WHERE username = 'charlie_b'), 'Good grief, I love coding in Node.js and PostgreSQL!')
-ON CONFLICT DO NOTHING;
+VALUES
+  ((SELECT id FROM users WHERE username = 'alice_s'),
+  'Hello world! This is Alices first long text message string.'),
+
+  ((SELECT id FROM users WHERE username = 'bob_j'),
+  'Hey there, Bob here. Just checking out the new message board system.'),
+
+  ((SELECT id FROM users WHERE username = 'charlie_b'),
+  'Good grief, I love coding in Node.js and PostgreSQL!');
+
 `;
 
 async function main() {
