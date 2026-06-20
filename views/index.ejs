@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club</title>
+</head>
+<body>
+  <aside>
+    <h1>Welcome to the message Club</h1>
+    <a href="/log-in">login</a>
+    <a href="/sign-up">sign-up</a>
+  </aside>
+
+  <main>
+    <h1>Messages</h1>
+    <% if (messages && messages.length) { %>
+      <% messages.forEach(message => { %>
+        <h1><%= message.message %></h1>
+      <% }) %>
+    <% } else { %>
+      <p>There are no messages.</p>
+    <% } %>
+  </main>
+</body>
+</html>

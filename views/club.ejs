@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club</title>
+</head>
+<body>
+  <h1>Club</h1>
+
+  <aside>
+    <h1>Send a message</h1>
+    <form action="/club-message" method="post">
+      <label for="">
+        <input type="textarea" name="message">
+        <button>send</button>
+      </label>
+    </form>
+  </aside>
+
+  <main>
+
+    <% if (messages && messages.length) { %>
+
+      <% messages.forEach(message => { %>
+        <h1><%= message.message %></h1>
+      <% }) %>
+
+    <% } else { %>
+
+      <p>There are no messages.</p>
+
+    <% } %>
+
+  </main>
+
+
+
+</body>
+</html>

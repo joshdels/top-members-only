@@ -1,0 +1,22 @@
+club_users (table) -done
+1. full-name
+2. username
+3. password
+4. membership_status - inactive default
+ 
+club_message (table) -done
+1. message
+2. date
+3. foreignkey connect to user
+
+----
+1. signup page - confirm pass - DONE
+2. login page - DONE
+3. join club (with password) - active member if correct password
+4. login using passport js
+  a. create new message (if logged in)
+5. homepage - all message (author - date) (hide message)
+6. admin (role) - see all 
+7. public -- show message (hide names)
+
+kulang kay ang passport.js config
