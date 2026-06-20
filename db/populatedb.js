@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { Pool } = require("pg");
+const { Client, Pool } = require("pg");
 
 const SQL = `
 CREATE TABLE IF NOT EXISTS users (
@@ -46,22 +46,43 @@ VALUES
 async function main() {
   console.log("Seeding...");
 
-  const client = new Pool({
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-  });
+  if (process.env.NODE_ENV === "production") {
+    console.log("Production");
+    const client = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    });
 
-  try {
-    await client.connect();
-    await client.query(SQL);
-    console.log("Done");
-  } catch (err) {
-    console.error("Seeding failed:", err);
-  } finally {
-    await client.end();
+    try {
+      await client.connect();
+      await client.query(SQL);
+
+      console.log("Done");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      await client.end();
+    }
+  } else {
+    const client = new Pool({
+      host: process.env.DB_HOST,
+      database: process.env.DB_DATABASE,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
+    });
+
+    try {
+      await client.connect();
+      await client.query(SQL);
+      console.log("Done");
+    } catch (err) {
+      console.error("Seeding failed:", err);
+    } finally {
+      await client.end();
+    }
   }
 }
 

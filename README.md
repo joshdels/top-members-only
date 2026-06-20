@@ -13,6 +13,27 @@ this is a odin project exercises where I use authentication and authorization
 - pasportjs
 - bycrypt
 
+## environment
+
+local
+```
+DB_HOST=
+DB_USER=
+DB_DATABASE=
+DB_PASSWORD=
+DB_PORT=
+
+SECRET=secrets
+```
+production
+```
+NODE_ENV=production
+DATABASE_URL="neon-connection"
+```
+
+
+
+
 ## get started
 
 ```
